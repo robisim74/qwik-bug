@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { Slot, component$, useVisibleTask$, $ } from "@builder.io/qwik";
 import {
   QwikCityProvider,
   RouterOutlet,
@@ -7,6 +7,13 @@ import {
 import { RouterHead } from "./components/router-head/router-head";
 
 import "./global.css";
+
+export const MyProvider = component$(() => {
+  useVisibleTask$(() => {
+    console.log("VISIBLE")
+  }, { strategy: 'document-ready' });
+  return <Slot />
+});
 
 export default component$(() => {
   /**
@@ -17,16 +24,18 @@ export default component$(() => {
    */
 
   return (
-    <QwikCityProvider>
-      <head>
-        <meta charSet="utf-8" />
-        <link rel="manifest" href="/manifest.json" />
-        <RouterHead />
-        <ServiceWorkerRegister />
-      </head>
-      <body lang="en">
-        <RouterOutlet />
-      </body>
-    </QwikCityProvider>
+    <MyProvider>
+      <QwikCityProvider>
+        <head>
+          <meta charSet="utf-8" />
+          <link rel="manifest" href="/manifest.json" />
+          <RouterHead />
+          <ServiceWorkerRegister />
+        </head>
+        <body lang="en">
+          <RouterOutlet />
+        </body>
+      </QwikCityProvider>
+    </MyProvider>
   );
 });
